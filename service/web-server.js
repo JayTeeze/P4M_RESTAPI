@@ -21,17 +21,6 @@ function start() {
         app.use(cors());
     
         app.use('/api', router);
-    
-        // httpServer.listen(port, (err) => {
-        //     if (err) {
-        //         reject(err);
-        //         return;
-        //     }
-
-        //     console.log(`Web server listening on port: ${port}`);
-
-        //     resolve();
-        // });
 
         httpServer.listen(port).on('listening', () => {
             console.log(`Web server listening on port: ${port}`);
@@ -47,7 +36,7 @@ module.exports.start = start;
 
 function close() {
     return new Promise((resolve, reject) => {
-        console.log('Closing web server');
+        console.log('Closing web server..');
         httpServer.close().on('error', (err) => {
             reject(err);
             return;
