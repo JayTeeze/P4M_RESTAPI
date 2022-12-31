@@ -36,7 +36,6 @@ module.exports.start = start;
 
 function close() {
     return new Promise((resolve, reject) => {
-        console.log('Closing web server..');
         httpServer.close().on('error', (err) => {
             reject(err);
             return;

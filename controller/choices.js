@@ -1,20 +1,33 @@
 const choices = require('../db_apis/choices');
 
-// refactor for new choices api module
-function get(req, res, next) {
+async function get(req, res, next) {
     let id = req.params.id && parseInt(req.params.id);
-    let result = choices.find(id);
-    res.status(200).json(result);
+    let result = await choices.find(id);
+
+    if (id && result.length === 1) {
+        res.status(200).json(result[0]);
+    } else if (result.length > 0) {
+        res.status(200).json(result);
+    } else {
+        res.sendStatus(404);
+    }
 }
 
 module.exports.get = get;
 
-function post(req, res, next) {
+function getChoiceFromReq(req) {
+    let choice = {
+        name: req.body.name
+    }
+    return choice;
+}
+
+async function post(req, res, next) {
+
     if (req.body.name) {
-        let choice = {
-            name: req.body.name
-        }
-        choice = choices.create(choice);
+        let choice = getChoiceFromReq(req);
+        choice = await choices.create(choice);
+
         res.status(201).json(choice);
     } else {
         res.status(400).send('Bad Request');
@@ -23,7 +36,7 @@ function post(req, res, next) {
 
 module.exports.post = post;
 
-function put(req, res, next) {
+async function put(req, res, next) {
     if (req.params.id) {
         let choice = {
             id: parseInt(req.params.id),

@@ -1,3 +1,5 @@
+const database = require('../service/database');
+
 // Simulated DB
 let data = [
     {id: 1, name: 'Taco Bell'},
@@ -11,21 +13,32 @@ let data = [
 module.exports.data = data;
 
 // find, create, update, delete
-function find(id) {
+let baseQuery = `SELECT * FROM choice`;
+
+async function find(id) {
+    let query = baseQuery;
+    let binds = [];
+
     if (id) {
-        let result = data.find(element => element.id === id);
-        return result ? result : {};
-    } else {
-        return data;
+        query += ` WHERE id = ?`;
+        binds = [id];
     }
+
+    const result = await database.simpleExecute(query, binds);
+    
+    return result;
 }
 
 module.exports.find = find;
 
-function create(choice) {
-    choice.id = data[data.length - 1].id + 1;
-    data.push(choice);
-    return choice;
+let createQuery = `INSERT INTO choice (name) VALUES (?)`;
+
+async function create(choice) {
+    let query = createQuery;
+    let binds = [choice.name];
+
+    const result = await database.simpleExecute(query, binds);
+    return result;
 }
 
 module.exports.create = create;
