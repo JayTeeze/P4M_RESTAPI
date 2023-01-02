@@ -1,6 +1,6 @@
 const sqlite = require('sqlite3').verbose();
 
-// Make accessable to other modules
+// Make accessible to other modules
 let db;
 
 function openConnection() {
@@ -31,16 +31,26 @@ function closeConnection() {
 
 module.exports.closeConnection = closeConnection;
 
-function simpleExecute(sql, binds = []) {
+function simpleExecute(sql, binds = [], isDML) {
     return new Promise((resolve, reject)  => {
-        db.all(sql, binds, function (err, rows){
-            if (err) {
-                console.log('Encountered error', err);
-                reject(err);
-            }
-            console.log(this);
-            resolve(rows);
-        });
+        if (isDML) {
+            db.run(sql, binds, function (err){
+                if (err) {
+                    console.log('Encountered error', err);
+                    reject(err);
+                }
+                resolve(this);
+            });
+        } else {
+            db.all(sql, binds, function (err, rows){
+                if (err) {
+                    console.log('Encountered error', err);
+                    reject(err);
+                }
+                resolve(rows);
+            });
+        }
+
     })
 }
 
