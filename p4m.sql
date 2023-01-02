@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS choice(id INTEGER PRIMARY KEY, name TEXT NOT NULL, cr
 
 -- Trigger:
 
-CREATE TRIGGER choice_on_update UPDATE ON choice FOR EACH ROW BEGIN UPDATE choice SET updated_at = CURRENT_TIMESTAMP WHERE NEW.id = OLD.id; END;
+CREATE TRIGGER choice_on_update UPDATE ON choice BEGIN UPDATE choice SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id; END;
