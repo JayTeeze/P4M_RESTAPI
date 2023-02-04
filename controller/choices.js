@@ -55,9 +55,9 @@ module.exports.post = post;
 
 async function put(req, res, next) {
     try {
-        if (req.params.id && req.body.name) {
+        if (req.body.id && req.body.name) {
             let choice = getChoiceFromReq(req);
-            choice.id = parseInt(req.params.id);
+            choice.id = parseInt(req.body.id);
             
             const result = await choices.update(choice);
     
@@ -85,7 +85,7 @@ async function del(req, res, next) {
             const result = await choices.remove(id);
     
             if (result.changes !== 0) {
-                res.status(200).send('Item Deleted');
+                res.sendStatus(204);
             } else {
                 res.sendStatus(404);
             }
